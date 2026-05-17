@@ -7,12 +7,6 @@ const nodemailer = require('nodemailer');
 const rateLimit = require('express-rate-limit');
 const { protect } = require('../middleware/authMiddleware');
 
-const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // 5 requests per window
-  message: { message: 'Too many login attempts from this IP, please try again after 15 minutes.' }
-});
-
 const forgotPasswordLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
   max: 3, // 3 requests per hour
@@ -47,7 +41,7 @@ router.post('/register', async (req, res) => {
 });
 
 // Login User
-router.post('/login', loginLimiter, async (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
